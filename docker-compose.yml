@@ -1,0 +1,19 @@
+services:
+  app:
+    build: .
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "5000:8080" # Feel free to change the ports as needed
+    env_file: ".env.app"
+
+  mysql:
+    image: mysql:8.4.3
+    env_file: ".env.mysql"
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root -p=$$MYSQL_ROOT_PASSWORD
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 10
