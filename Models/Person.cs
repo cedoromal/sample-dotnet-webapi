@@ -9,24 +9,29 @@ namespace sample_dotnet_webapi.Models
         public Guid PersonId { get; set; }
 
         [MinLength(1)]
+        [Required]
         public string FirstName { get; set; } = "";
 
         [MinLength(1)]
+        [Required]
         public string LastName { get; set; } = "";
 
         [CustomValidation(typeof(PersonValidator), nameof(PersonValidator.ValidateBirthDate))]
+        [Required]
         public DateOnly BirthDate { get; set; }
 
         [CustomValidation(
             typeof(PersonValidator),
             nameof(PersonValidator.ValidateNonNegativeDecimal)
         )]
+        [Required]
         public decimal Income { get; set; }
 
         [CustomValidation(
             typeof(PersonValidator),
             nameof(PersonValidator.ValidateNonNegativeDecimal)
         )]
+        [Required]
         public decimal Balance { get; set; }
     }
 
