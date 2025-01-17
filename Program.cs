@@ -4,6 +4,8 @@ using sample_dotnet_webapi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddEnvironmentVariables();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
