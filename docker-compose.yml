@@ -1,6 +1,6 @@
 services:
   app:
-    build: .
+    build: https://github.com/cedoromal/sample-dotnet-webapi.git
     depends_on:
       mysql:
         condition: service_healthy
