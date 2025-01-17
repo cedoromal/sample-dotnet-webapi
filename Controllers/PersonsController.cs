@@ -151,7 +151,7 @@ namespace sample_dotnet_webapi.Controllers
         [HttpPost("csv")]
         public async Task<IActionResult> PostPersonsCsv([FromBody] string objectName)
         {
-            var emptyFlag = true;
+            var validPersonList = new List<Person>();
 
             // Check whether the object exists using statObject().
             // If the object is not found, statObject() throws an exception,
@@ -200,8 +200,7 @@ namespace sample_dotnet_webapi.Controllers
                                             continue;
                                         }
 
-                                        emptyFlag = false;
-                                        _context.Persons.Add(person);
+                                        validPersonList.Add(person);
                                     }
                                 }
                             }
@@ -216,12 +215,13 @@ namespace sample_dotnet_webapi.Controllers
                 return NotFound();
             }
 
-            await _context.SaveChangesAsync();
-
-            if (emptyFlag)
+            if (validPersonList.Count <= 0)
                 return BadRequest("No valid records found in the specified file");
 
-            return NoContent();
+            _context.Persons.AddRange(validPersonList);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetPersons), new { }, validPersonList);
         }
 
         // DELETE: api/Persons/5
