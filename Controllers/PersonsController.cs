@@ -47,7 +47,7 @@ namespace sample_dotnet_webapi.Controllers
             if (!string.IsNullOrEmpty(firstName))
                 query = query.Where(p => p.FirstName.Contains(firstName));
             if (!string.IsNullOrEmpty(lastName))
-                query = query.Where(p => p.FirstName.Contains(lastName));
+                query = query.Where(p => p.LastName.Contains(lastName));
 
             if (birthDateMin.HasValue)
                 query = query.Where(p => p.BirthDate >= birthDateMin.Value);
