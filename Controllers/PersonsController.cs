@@ -29,11 +29,42 @@ namespace sample_dotnet_webapi.Controllers
             _minioClient = minioClient;
         }
 
-        // GET: api/Persons
+        // GET: api/Persons?firstName=juan&lastName=delacruz&birthDateMin=1-1-1970&birthDateMax=1-1-1971&incomeMin=5&incomeMax=10&balanceMin=5&balanceMax=10
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> GetPersons()
+        public async Task<ActionResult<IEnumerable<Person>>> GetPersons(
+            [FromQuery] string? firstName,
+            [FromQuery] string? lastName,
+            [FromQuery] DateOnly? birthDateMin,
+            [FromQuery] DateOnly? birthDateMax,
+            [FromQuery] decimal? incomeMin,
+            [FromQuery] decimal? incomeMax,
+            [FromQuery] decimal? balanceMin,
+            [FromQuery] decimal? balanceMax
+        )
         {
-            return await _context.Persons.ToListAsync();
+            var query = _context.Persons.AsQueryable();
+
+            if (!string.IsNullOrEmpty(firstName))
+                query = query.Where(p => p.FirstName.Contains(firstName));
+            if (!string.IsNullOrEmpty(lastName))
+                query = query.Where(p => p.FirstName.Contains(lastName));
+
+            if (birthDateMin.HasValue)
+                query = query.Where(p => p.BirthDate >= birthDateMin.Value);
+            if (birthDateMax.HasValue)
+                query = query.Where(p => p.BirthDate <= birthDateMax.Value);
+
+            if (incomeMin.HasValue)
+                query = query.Where(p => p.Income >= incomeMin.Value);
+            if (incomeMax.HasValue)
+                query = query.Where(p => p.Income <= incomeMax.Value);
+
+            if (balanceMin.HasValue)
+                query = query.Where(p => p.Balance >= balanceMin.Value);
+            if (balanceMax.HasValue)
+                query = query.Where(p => p.Balance <= balanceMax.Value);
+
+            return await query.ToListAsync();
         }
 
         // GET: api/Persons/5
