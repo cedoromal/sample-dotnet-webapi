@@ -84,7 +84,7 @@ namespace sample_dotnet_webapi.Controllers
         // GET: api/Persons/csv
         // Gets the GUID for the object and the presigned link for CSV upload
         [HttpGet("csv")]
-        public async Task<ActionResult<csvUploadDetails>> GetPersonsCsv(Guid id)
+        public async Task<ActionResult<csvUploadDetails>> GetPersonsCsv()
         {
             var objGuid = Guid.NewGuid().ToString();
             PresignedPutObjectArgs args = new PresignedPutObjectArgs()
