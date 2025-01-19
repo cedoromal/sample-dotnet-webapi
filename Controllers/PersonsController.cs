@@ -218,6 +218,17 @@ namespace sample_dotnet_webapi.Controllers
             return CreatedAtAction(nameof(GetPersons), new { }, validPersonList);
         }
 
+        // DELETE: api/Persons/
+        [HttpDelete]
+        public async Task<IActionResult> DeletePersons()
+        {
+            var persons = await _context.Persons.ToListAsync();
+            _context.Persons.RemoveRange(persons);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         // DELETE: api/Persons/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePerson(Guid id)
