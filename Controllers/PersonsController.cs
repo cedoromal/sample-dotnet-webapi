@@ -84,24 +84,18 @@ namespace sample_dotnet_webapi.Controllers
         // GET: api/Persons/csv
         // Gets the GUID for the object and the presigned link for CSV upload
         [HttpGet("csv")]
-        public async Task<ActionResult<csvUploadDetails>> GetPersonsCsv()
+        public async Task<ActionResult<CsvUploadDetails>> GetPersonsCsv()
         {
             var objGuid = Guid.NewGuid().ToString();
             PresignedPutObjectArgs args = new PresignedPutObjectArgs()
                 .WithBucket(_s3bucket)
                 .WithObject(objGuid)
                 .WithExpiry(60 * 10 * 1);
-            return new csvUploadDetails
+            return new CsvUploadDetails
             {
                 ObjName = objGuid,
                 UploadLink = await _minioClient.PresignedPutObjectAsync(args),
             };
-        }
-
-        public struct csvUploadDetails
-        {
-            public string ObjName { get; set; }
-            public string UploadLink { get; set; }
         }
 
         // PUT: api/Persons/5
