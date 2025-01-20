@@ -1,5 +1,5 @@
 services:
-  app:
+  dotnet-webapi:
     build: https://github.com/cedoromal/sample-dotnet-webapi.git
     depends_on:
       mysql:
@@ -17,3 +17,9 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  nextjs-frontend:
+    build: https://github.com/cedoromal/sample-nextjs-frontend.git
+    ports:
+      - "3000:3000" # Feel free to change the ports as needed
+    env_file: ".env.local"
