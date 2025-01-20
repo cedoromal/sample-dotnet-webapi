@@ -166,36 +166,31 @@ namespace sample_dotnet_webapi.Controllers
                     .WithCallbackStream(
                         (stream) =>
                         {
+                            // stream.CopyTo(Console.OpenStandardOutput());
                             using (StreamReader reader = new StreamReader(stream))
                             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                             {
-                                csv.Read();
-                                csv.ReadHeader();
-                                while (csv.Read())
+                                csv.Context.RegisterClassMap<PersonMap>();
+                                var persons = csv.GetRecords<Person>();
+
+                                foreach (var person in persons)
                                 {
-                                    csv.Context.RegisterClassMap<PersonMap>();
+                                    var isValid = Validator.TryValidateObject(
+                                        person,
+                                        new ValidationContext(person),
+                                        new List<ValidationResult>(),
+                                        true
+                                    );
 
-                                    var persons = csv.GetRecords<Person>();
-
-                                    foreach (var person in persons)
+                                    if (!isValid)
                                     {
-                                        var isValid = Validator.TryValidateObject(
-                                            person,
-                                            new ValidationContext(person),
-                                            new List<ValidationResult>(),
-                                            true
+                                        Console.WriteLine(
+                                            $"Discarding invalid record: {JsonSerializer.Serialize(person)}"
                                         );
-
-                                        if (!isValid)
-                                        {
-                                            Console.WriteLine(
-                                                $"Discarding invalid record: {JsonSerializer.Serialize(person)}"
-                                            );
-                                            continue;
-                                        }
-
-                                        validPersonList.Add(person);
+                                        continue;
                                     }
+
+                                    validPersonList.Add(person);
                                 }
                             }
                         }
